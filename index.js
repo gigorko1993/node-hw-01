@@ -1,4 +1,12 @@
 const { Command } = require("commander");
+const chalk = require("chalk");
+const {
+  listContacts,
+  getContactById,
+  removeContact,
+  addContact,
+} = require("./contacts");
+
 const program = new Command();
 program
   .option("-a, --action <type>", "choose action")
@@ -15,19 +23,43 @@ const argv = program.opts();
 function invokeAction({ action, id, name, email, phone }) {
   switch (action) {
     case "list":
-      // ...
+      listContacts().then(console.table).catch(console.error);
       break;
 
     case "get":
-      // ... id
+      getContactById(id)
+        .then((contact) => {
+          if (contact) {
+            console.log(chalk.blue("Contact successfully found"));
+            console.log(contact);
+          } else {
+            console.log(chalk.yellow("Contact not found"));
+          }
+        })
+        .catch(console.error);
       break;
 
     case "add":
-      // ... name email phone
+      addContact(name, email, phone)
+        .then((contact) => {
+          console.log(
+            chalk.blueBright(
+              `Contact of ${contact.name} successfully add to phonebook`
+            )
+          );
+        })
+        .catch(console.error);
+
       break;
 
     case "remove":
-      // ... id
+      removeContact(id)
+        .then((contact) => {
+          console.log(
+            chalk.magentaBright(`${contact.name} was deleted from phonebook`)
+          );
+        })
+        .catch(console.error);
       break;
 
     default:
