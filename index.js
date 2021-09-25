@@ -47,6 +47,7 @@ function invokeAction({ action, id, name, email, phone }) {
               `Contact of ${contact.name} successfully add to phonebook`
             )
           );
+          console.table(contact);
         })
         .catch(console.error);
 
